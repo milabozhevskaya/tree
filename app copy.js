@@ -36,7 +36,7 @@ const growth = {
 };
 const branchingTotalAngle = Math.PI * 2 / 3;
 const tree = makeTree({x: 250, y: 500, branchNumber: 4, length: 100, width: 4, branchingTotalAngle, iteration: 2});
-// drawTree(tree);
+drawTree(tree);
 
 /* 
 let lastStamp = 0;
@@ -152,10 +152,6 @@ function getEndXY(x, y, length, angle) {
   }
 }
 
-function getAngle(x1, y1, x2, y2) {
-  return Math.atan2(y2 - y1, x2 - x1);
-}
-
 /*
 PI * 2 / 3 === 120
 2
@@ -190,44 +186,16 @@ PI / 3
   canvas.width = innerWidth - 20;
   curve(250,100,350,100) */
 
-  function drawArc(beginX, beginY, endX, endY, lineWidth, color, lineCap = "round") {
-    const angle = getAngle(beginX, beginY, endX, endY);
-    const chordLength = Math.hypot((endX - beginX),(endY - beginY));
-    const height = chordLength / 5;
-    const radius = height/2 + chordLength**2 / 8 * 1/height;
-    const middleX = (endX + beginX) / 2;
-    const middleY = (endY + beginY) / 2;
-    const {x, y} = getEndXY(middleX, middleY, radius - height, angle + Math.PI / 2);
-    const startAngle = getAngle(x, y, beginX, beginY);
-    const endAngle = getAngle(x, y, endX, endY); 
-    ctx.beginPath();
-    ctx.arc(x, y, radius, startAngle, endAngle);
-    ctx.lineWidth = lineWidth; 
-    ctx.strokeStyle = color;
-    ctx.lineCap = lineCap;
-    ctx.stroke();
-  }
-  drawLine(200,200, 100,100, 1, "black");
-  drawArc(200,200, 100,100, 1, "black");
-  drawArc(100,100,200,200, 1, "black")
-   drawArc(100,100,300,300, 1, "black")
-   drawArc(300,300, 100,100,1, "black")
-   drawArc(100,100,100,200, 1, "black")
-   drawArc(100,200, 100,100,1, "black")
-   drawArc(100,100,200,100, 1, "black")
-   drawArc(200,100, 100,100,1, "black")
-/* 
-  var p2 = {x: 100   , y: 100   };
-    p1 = {x: 111, y:  30.9};
-    p3 = {x: 149.5 , y:  149.5};
-    diffX = p1.x - p2.x;
-    diffY = p1.y - p2.y;
-    radius = Math.abs(Math.sqrt(diffX*diffX + diffY*diffY));
-    startAngle = Math.atan2(diffY, diffX);
-    endAngle   = Math.atan2(p3.y - p2.y, p3.x - p2.x);
-    // ctx = document.querySelector("canvas").getContext("2d");
+//   var p2 = {x: 100   , y: 100   },
+//     p1 = {x: 111, y:  30.9},
+//     p3 = {x: 149.5 , y:  149.5},
+//     diffX = p1.x - p2.x,
+//     diffY = p1.y - p2.y,
+//     radius = Math.abs(Math.sqrt(diffX*diffX + diffY*diffY)),
+//     startAngle = Math.atan2(diffY, diffX),
+//     endAngle   = Math.atan2(p3.y - p2.y, p3.x - p2.x),
+//     ctx = document.querySelector("canvas").getContext("2d");
 
-// arc
-ctx.arc(p2.x, p2.y, radius, startAngle, endAngle, false);
-ctx.stroke(); */
-//r = h/2 + c** / 8h
+// // arc
+// ctx.arc(p2.x, p2.y, radius, startAngle, endAngle, false);
+// ctx.stroke();
