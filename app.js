@@ -1,17 +1,3 @@
-//написать функцию генерации углов
-//написать функцию генерации одиночных веток
-
-const canvas = document.querySelector('#canvas');
-const ctx = canvas.getContext("2d");
-// canvas.style.width = "100%";
-// canvas.style.height = "100%";
-// const canvasWidth = canvas.width;
-// const canvasHeight = canvas.height;
-const halfPI = Math.PI / 2;
-
-function randm(min, max) {
-  return Math.random() * (max - min) + min;
-}
 
 // const tree = {
 //   x: 250,
@@ -25,72 +11,20 @@ function randm(min, max) {
 //   ]
 // };
 
-const growth = {
-  maxLength: 150,
-  branchingLength: 25,
-  branchingCount: 3,
-  branchingTotalAngle: Math.PI * 2 / 3 + randm(-1, 1),
-  maxBranchDepth: 6,
-  maxLengthRatio: 0.7,
-  speed: 0.01,
-};
-const branchingTotalAngle = Math.PI * 2 / 3;
-const tree = makeTree({x: 250, y: 500, branchNumber: 4, length: 100, width: 4, branchingTotalAngle, iteration: 2});
-// drawTree(tree);
+
+
 
 /* 
-let lastStamp = 0;
-let frame = requestAnimationFrame(animate);
 
-setTimeout(() => cancelAnimationFrame(frame), 50000);
-
-function animate(timeStamp) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  drawTree(tree);
-  const timePassed = timeStamp - lastStamp;
-  lastStamp = timeStamp;
-  grow(tree, timePassed);
-  frame = requestAnimationFrame(animate);
-}
  */
 
-//функция роста
-function grow(tree, time) {
-  if (tree.length < growth.maxLength && (!tree.tree || tree.length < growth.maxLengthRatio * tree.tree.length)) {
-    tree.length += time * growth.speed;
-    // tree.length++;
-  }
-  if (!tree.branches && tree.length >= growth.branchingLength && tree.depth < growth.maxBranchDepth) {
-    // const betweenBranchAngle = Math.PI * 2 / 3 / (growth.branchingCount - 1);
-    // console.log(betweenBranchAngle);
-    addBranches(tree, growth.branchingCount, 1, 1, growth.branchingTotalAngle, randm(-2, 1))
-  }
-  tree.branches?.forEach(branch => grow(branch, time));
-}
 
 
 
-//функция генерации детей
-function addBranches(tree, count, length, width, totalAngle, angle = 0, iteration = 0) {
-  if (!tree.branches) tree.branches = [];
-  console.log(angle);
-  const leftBranchAngle = -totalAngle / 2 + angle ;
-  const betweenBranchAngle = totalAngle / (count - 1);
-  for (let i = 0; i < count; i++) {
-    const branchAngle = leftBranchAngle + betweenBranchAngle * i;
-    tree.branches[i] = makeBranch(tree, branchAngle, length, width, "#4D2323", tree.depth + 1);
-  }
-  if (iteration !== 0) {
-    tree.branches.forEach((branch) => {
-      addBranches(branch, count, length, width, totalAngle, randm(-1, 1), iteration - 1);
-    });
-  }
-}
 
-//функция генерации ветки
-function makeBranch(tree, angle, length, width, color, depth) {
-  return { tree, angle, length, width, color, depth };
-}
+
+
+
 
 //функция генерация угла
 //принимает максимальный угол в радианах
@@ -102,59 +36,30 @@ function makeAngle(maxAngle) {
   return randomDegrees * Math.PI / 180;
 }
 
-
+function drawCurvedTrapezia(x1, y1, x2, y2, x3, y3, x4, y4) {
+  ctx.beginPath();
+  ctx.moveTo(x1,y1);
+  ctx.quadraticCurveTo(x1+100,y1, x2, y2)
+  ctx.stroke();
+  // drawLine(x1, y1, x2, y2);
+  drawLine(x2, y2, x3, y3);
+  drawLine(x3, y3, x4, y4);
+  drawLine(x4, y4, x1, y1);
+  
+}
+drawCurvedTrapezia(200,500,300,200,400,200,500,500);
 //Формируется изначальное дерево, в котором забито кол-во детей 
 //добавление остальных детей в функции growth
 
-//функция генерации экземпляра дерева                                   
-function makeTree ({x, y, branchNumber, length, width, branchingTotalAngle, iteration = 0}) {
-  const tree = {
-    x: x,
-    y: y,
-    angle: -halfPI,
-    length: length,
-    width: width,
-    color: "#4D2323",
-    depth: 0,
-  };
-
-  addBranches(tree, branchNumber, length, width, branchingTotalAngle, 0, iteration);
-  return tree;
-}
 
 
-//функция прорисовки дерева
-function drawTree(tree, x, y, angle = 0) {
-  const {x: endX, y: endY} = getEndXY(tree.x ?? x, tree.y ?? y, tree.length, tree.angle + angle);
-  drawLine(tree.x ?? x, tree.y ?? y, endX, endY, tree.width, tree.color);
 
-  tree.branches?.forEach((branch) => {
-    drawTree(branch, endX, endY, tree.angle + angle);
-  });
-}
 
-//функция прорисовки линии
-function drawLine(beginX, beginY, endX, endY, lineWidth, color, lineCap = "round") {
-  ctx.beginPath();
-  ctx.moveTo(beginX,beginY);
-  ctx.lineTo(endX, endY);
-  ctx.lineWidth = lineWidth; 
-  ctx.strokeStyle = color;
-  ctx.lineCap = lineCap;
-  ctx.stroke();
-}
 
-//функция нахождения конечной точки ветки
-function getEndXY(x, y, length, angle) {
-  return {
-    x: x - Math.cos(Math.PI - angle) * length,
-    y: y + Math.sin(Math.PI - angle) * length
-  }
-}
 
-function getAngle(x1, y1, x2, y2) {
-  return Math.atan2(y2 - y1, x2 - x1);
-}
+
+
+
 
 /*
 PI * 2 / 3 === 120
@@ -190,32 +95,18 @@ PI / 3
   canvas.width = innerWidth - 20;
   curve(250,100,350,100) */
 
-  function drawArc(beginX, beginY, endX, endY, lineWidth, color, lineCap = "round") {
-    const angle = getAngle(beginX, beginY, endX, endY);
-    const chordLength = Math.hypot((endX - beginX),(endY - beginY));
-    const height = chordLength / 5;
-    const radius = height/2 + chordLength**2 / 8 * 1/height;
-    const middleX = (endX + beginX) / 2;
-    const middleY = (endY + beginY) / 2;
-    const {x, y} = getEndXY(middleX, middleY, radius - height, angle + Math.PI / 2);
-    const startAngle = getAngle(x, y, beginX, beginY);
-    const endAngle = getAngle(x, y, endX, endY); 
-    ctx.beginPath();
-    ctx.arc(x, y, radius, startAngle, endAngle);
-    ctx.lineWidth = lineWidth; 
-    ctx.strokeStyle = color;
-    ctx.lineCap = lineCap;
-    ctx.stroke();
-  }
-  drawLine(200,200, 100,100, 1, "black");
+  
+/*   drawLine(200,200, 100,100, 1, "black");
   drawArc(200,200, 100,100, 1, "black");
   drawArc(100,100,200,200, 1, "black")
-   drawArc(100,100,300,300, 1, "black")
-   drawArc(300,300, 100,100,1, "black")
-   drawArc(100,100,100,200, 1, "black")
-   drawArc(100,200, 100,100,1, "black")
-   drawArc(100,100,200,100, 1, "black")
-   drawArc(200,100, 100,100,1, "black")
+  drawArc(100,100,300,300, 1, "black")
+  drawArc(300,300, 100,100,1, "black")
+  drawArc(100,100,100,200, 1, "black")
+  drawArc(100,200, 100,100,1, "black")
+  drawArc(100,100,200,100, 1, "black")
+  drawArc(200,100, 100,100,1, "black")
+  ctx.fillStyle = '#1a2edb'; // тёмно-синий цвет
+  ctx.fill(); */
 /* 
   var p2 = {x: 100   , y: 100   };
     p1 = {x: 111, y:  30.9};
@@ -231,3 +122,33 @@ PI / 3
 ctx.arc(p2.x, p2.y, radius, startAngle, endAngle, false);
 ctx.stroke(); */
 //r = h/2 + c** / 8h
+
+
+
+
+//Красивый фильтр круг
+// for(let i = 0; i < 1; i+=0.0001) {drawArc(200,100, 200,200,i,1, "black")}
+
+// undefined
+//    for(let i = 0; i < 1; i+=0.01) {drawArc(200,100, 200,200,i,1, "white")}
+
+// undefined
+
+
+
+// ctx.beginPath();
+// ctx.moveTo(50,20);
+// ctx.bezierCurveTo(230, 30, 150, 60, 50, 100);
+// ctx.stroke();
+/* 
+ctx.fillStyle = 'blue';
+// начальная точка
+ctx.fillRect(50, 20, 10, 10);
+// конечная точка
+ctx.fillRect(50, 100, 10, 10);
+
+ctx.fillStyle = 'red';
+// первая контрольная точка
+ctx.fillRect(230, 30, 10, 10);
+// вторая контрольная точка
+ctx.fillRect(150, 70, 10, 10); */

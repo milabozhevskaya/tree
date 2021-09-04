@@ -80,3 +80,15 @@ a {
     -webkit-tap-highlight-color: rgba(0,0,0,0); -webkit-tap-highlight-color: transparent;
   } */
 }
+canvas {
+  display: block;
+}
+.btn-trapezoid {
+  position: absolute;
+  padding: 18px 10px;
+  background-color: blue;
+  color: white;
+  font-size: 18px;
+  top: 0;
+  right: 0;
+}

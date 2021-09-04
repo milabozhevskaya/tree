@@ -7,7 +7,6 @@ const ctx = canvas.getContext("2d");
 // canvas.style.height = "100%";
 // const canvasWidth = canvas.width;
 // const canvasHeight = canvas.height;
-const halfPI = Math.PI / 2;
 
 function randm(min, max) {
   return Math.random() * (max - min) + min;
