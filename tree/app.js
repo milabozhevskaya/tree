@@ -11,8 +11,8 @@ const treeProperties = {
   length: 90,
   branchingLength: 1.1,
   width: 44,
-  branchingWidth: 0.6,
-  branchingTotalAngle: Math.PI / 3, 
+  branchingWidth: 0.5,
+  branchingTotalAngle: branchingTotalAngle, 
   maxCurvature: 0.1, 
   iteration: 4,
 };
@@ -28,7 +28,7 @@ const growth = {
 };
 
 const tree = makeTree(treeProperties);
-// console.log(tree);
+
 drawTree(tree);
 
 // beginGrowth(tree, growth, 50000);

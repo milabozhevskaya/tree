@@ -34,10 +34,10 @@ function makeTree({x, y, branchNumber, length, branchingLength, width, branching
 function addBranches({ tree, count, branchingLength, branchingWidth, totalAngle, angle, maxCurvature = 0, iteration = 0 }) {
 
   if (!tree.branches) tree.branches = [];
-  const leftBranchAngle = angle - totalAngle / 2;
+  totalAngle = (rnd(0, 1.001) < 0.5 ? -1 : 1) * (totalAngle / 5) + totalAngle;
+  const leftBranchAngle = angle - totalAngle / 2 + (rnd(0, 1.001) < 0.5 ? -1 : 1) * (totalAngle / 4);
   // const leftBranchAngle = -totalAngle / 2 + angle ;
   // const betweenBranchAngle = totalAngle / (count - 1);
-  console.log(count);
   let betweenBranchAngles = [];
   betweenBranchAngles[0] = totalAngle;
   for (let i = 1; i < count - 1; i++) {
@@ -45,7 +45,6 @@ function addBranches({ tree, count, branchingLength, branchingWidth, totalAngle,
   }
   betweenBranchAngles.push(0);
   betweenBranchAngles.sort();
-  console.log(betweenBranchAngles);
   const length = tree.length * branchingLength;
   const width = tree.width * branchingWidth;
   const { x: centerX, y: centerY} = getCenterXY(tree.leftUpX, tree.leftUpY, tree.rightUpX, tree.rightUpY);
