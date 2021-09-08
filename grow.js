@@ -1,6 +1,6 @@
 import { rnd } from "./math.js";
 import { clear } from "./canvas.js";
-import { drawTree } from "./draw.js";
+import { drawTree } from "./tree/draw.js";
 import { addBranches } from "./buildTree.js";
 
 

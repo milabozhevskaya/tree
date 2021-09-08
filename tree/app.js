@@ -1,18 +1,20 @@
 import { makeTree } from "../buildTree.js";
-import { drawTree } from "../draw.js";
+import { drawTree } from "./draw.js";
 import { beginGrowth } from "../grow.js";
 import { rnd } from "../math.js";
 
 const branchingTotalAngle = Math.PI * 2 / 6;
 const treeProperties = {
-  x: 250,
-  y: 500,
-  branchNumber: 2, 
-  length: 100, 
-  width: 4, 
-  branchingTotalAngle, 
+  x: 450,
+  y: 750,
+  branchNumber: 4, 
+  length: 90,
+  branchingLength: 1.1,
+  width: 44,
+  branchingWidth: 0.6,
+  branchingTotalAngle: Math.PI / 3, 
   maxCurvature: 0.1, 
-  iteration: 0,
+  iteration: 4,
 };
 
 const growth = {
@@ -26,7 +28,7 @@ const growth = {
 };
 
 const tree = makeTree(treeProperties);
+// console.log(tree);
+drawTree(tree);
 
-// drawTree(tree);
-
-beginGrowth(tree, growth, 50000);
+// beginGrowth(tree, growth, 50000);
