@@ -7,10 +7,10 @@ const branchingTotalAngle = Math.PI * 2 / 6;
 const treeProperties = {
   x: 450,
   y: 750,
-  branchNumber: 4, 
-  length: 90,
-  branchingLength: 1.1,
-  width: 44,
+  branchNumber: 2, 
+  length: 180,
+  branchingLength: 0.9,
+  width: 94,
   branchingWidth: 0.5,
   branchingTotalAngle: branchingTotalAngle, 
   maxCurvature: 0.1, 
@@ -28,7 +28,7 @@ const growth = {
 };
 
 const tree = makeTree(treeProperties);
-
+console.log(tree);
 drawTree(tree);
 
 // beginGrowth(tree, growth, 50000);

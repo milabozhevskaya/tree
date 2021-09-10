@@ -1,4 +1,4 @@
-import { halfPI, getUpPointsBranch, getCenterXY } from "./geometry.js";
+import { halfPI, getUpPointsBranch, getCenterXY, getHeightCurvature } from "./geometry.js";
 import { rnd } from "./math.js";
 
 //функция генерации экземпляра дерева                                   
@@ -47,14 +47,22 @@ function addBranches({ tree, count, branchingLength, branchingWidth, totalAngle,
   betweenBranchAngles.sort();
   const length = tree.length * branchingLength;
   const width = tree.width * branchingWidth;
+  const heightCurvature = (tree.width - width) / 7;
+  const heightCurvatureLeft = heightCurvature;
+  const heightCurvatureRight = heightCurvature;
+
   const { x: centerX, y: centerY} = getCenterXY(tree.leftUpX, tree.leftUpY, tree.rightUpX, tree.rightUpY);
-  
 
   for (let i = 0; i < count; i++) {
     const curvature = i === (count -1) / 2? 0 : i < (count - 1) / 2? maxCurvature : -maxCurvature;
     let branchAngle = leftBranchAngle + betweenBranchAngles[i];
     const { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY } = getUpPointsBranch({ x: centerX, y: centerY, length: length, width: width * branchingWidth, angle: branchAngle });
-    tree.branches[i] = makeBranch(tree, leftUpX, leftUpY, rightUpX, rightUpY, branchAngle, length, width, curvature, "#4D2323", tree.depth + 1);
+    // const heightCurvatureLeft = getHeightCurvature({ x1: tree.leftUpX, y1: tree.leftUpY, x2: leftUpX, y2: leftUpY, pointAngle: branchAngle });
+    // console.log(tree.rightDownX, tree.rightDownY, "x1, x2");
+    // const heightCurvatureRight = -2;
+    // const heightCurvatureRight = getHeightCurvature({ x1: tree.rightDownX, y1: tree.rightDownY, x2: rightUpX, y2: tree.rightUpY, pointX: centerX + width * branchingWidth / 2, pointY: centerY, pointAngle: branchAngle }) * -1;
+    // console.log(heightCurvatureLeft, heightCurvatureRight);
+    tree.branches[i] = makeBranch(tree, leftUpX, leftUpY, rightUpX, rightUpY, branchAngle, length, width, heightCurvatureLeft, heightCurvatureRight, curvature, "#4D2323", tree.depth + 1);
   }
   if (iteration !== 0) {
     tree.branches.forEach((branch) => {
@@ -64,7 +72,7 @@ function addBranches({ tree, count, branchingLength, branchingWidth, totalAngle,
 }
 
 //функция генерации ветки
-function makeBranch(tree, leftUpX, leftUpY, rightUpX, rightUpY, angle, length, width, curvature, color, depth) {
+function makeBranch(tree, leftUpX, leftUpY, rightUpX, rightUpY, angle, length, width, heightCurvatureLeft, heightCurvatureRight, curvature, color, depth) {
   return { 
     leftDownX: tree.leftUpX,
     leftDownY: tree.leftUpY,
@@ -74,6 +82,8 @@ function makeBranch(tree, leftUpX, leftUpY, rightUpX, rightUpY, angle, length, w
     leftUpY: leftUpY,
     rightUpX: rightUpX,
     rightUpY: rightUpY,
+    heightCurvatureLeft: heightCurvatureLeft, 
+    heightCurvatureRight: heightCurvatureRight,
     curvature: 0,
     angle: angle,
     length: length,

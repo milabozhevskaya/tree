@@ -23,8 +23,8 @@ function drawTree(tree) {
   });
 }
 function drawBranch(tree) {
-  const { x: controlLeftX, y: controlLeftY } = getControlPoint(tree.leftDownX, tree.leftDownY, tree.leftUpX, tree.leftUpY, -10);
-  const { x: controlRightX, y: controlRightY } = getControlPoint(tree.rightUpX, tree.rightUpY, tree.rightDownX, tree.rightDownY, 10);
+  const { x: controlLeftX, y: controlLeftY } = getControlPoint({ x1: tree.leftDownX, y1: tree.leftDownY, x2: tree.leftUpX, y2: tree.leftUpY, h: -tree.heightCurvatureLeft });
+  const { x: controlRightX, y: controlRightY } = getControlPoint({ x1: tree.rightDownX, y1: tree.rightDownY, x2: tree.rightUpX, y2: tree.rightUpY, h: tree.heightCurvatureRight });
   drawQuadraticCurve({ beginX: tree.leftDownX, beginY: tree.leftDownY, controlX: controlLeftX, controlY: controlLeftY, endX: tree.leftUpX, endY: tree.leftUpY });
   drawLine({ beginX: tree.leftUpX, beginY: tree.leftUpY, endX: tree.rightUpX, endY: tree.rightUpY, begin: false })
   drawQuadraticCurve({ beginX: tree.rightUpX, beginY: tree.rightUpY, controlX: controlRightX, controlY: controlRightY, endX: tree.rightDownX, endY: tree.rightDownY, begin: false });

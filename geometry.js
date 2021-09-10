@@ -18,12 +18,25 @@ function getCenterXY(x1, y1, x2, y2) {
   }
 }
 //control point for Bezier curve (one control)
-function getControlPoint(x1, y1, x2, y2, h) {
+function getControlPoint({ x1, y1, x2, y2, h, levelCurvature = 5 / 6 }) {
   const chord = Math.hypot(x1 - x2, y1 - y2);
   const angle = getAngle(x1, y1, x2, y2);
-  const {x: px, y: py} = getEndXY(x1, y1, 1/3 * chord, angle);
+  const {x: px, y: py} = getEndXY(x1, y1, levelCurvature * chord, angle);
   const {x: x, y: y} = getEndXY(px, py, h, angle - Math.PI / 2);
   return {x, y, type: "control"};
+}
+
+function getHeightCurvature({ x1, y1, x2, y2, pointX, pointY, pointAngle, levelCurvature = 25 / 30 }) {
+  // console.log(- Math.PI - pointAngle - getAngle(x1, y1, x2, y2), "Math.PI");
+  console.log(Math.PI);
+  console.log("pointAngle", Math.PI + pointAngle);
+  console.log("angleC", getAngle(x1, y1, x2, y2));
+
+  const angleB = Math.PI - (Math.PI + pointAngle) + getAngle(x1, y1, x2, y2);
+  console.log("angleB", angleB);
+  const angleA = Math.PI - Math.PI / 2 - angleB;
+  const catetA = Math.hypot(x1 - x2, y1 - y2) * levelCurvature;
+  return  catetA / Math.tan(angleA);
 }
 
 function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature = 0, rightCurvature = 0 }) {
@@ -34,4 +47,4 @@ function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature
   return { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY };
 }
 
-export { halfPI, getEndXY, getAngle, getControlPoint, getUpPointsBranch, getCenterXY };
+export { halfPI, getEndXY, getAngle, getControlPoint, getUpPointsBranch, getCenterXY, getHeightCurvature };
