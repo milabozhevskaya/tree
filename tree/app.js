@@ -6,7 +6,7 @@ import { rnd } from "../math.js";
 const branchingTotalAngle = Math.PI * 2 / 6;
 const treeProperties = {
   x: 450,
-  y: 750,
+  y: 1050,
   branchNumber: 2, 
   length: 180,
   branchingLength: 0.9,
@@ -28,7 +28,7 @@ const growth = {
 };
 
 const tree = makeTree(treeProperties);
-console.log(tree);
+// console.log(tree);
 drawTree(tree);
 
 // beginGrowth(tree, growth, 50000);

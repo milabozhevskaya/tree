@@ -39,6 +39,16 @@ function getHeightCurvature({ x1, y1, x2, y2, pointX, pointY, pointAngle, levelC
   return  catetA / Math.tan(angleA);
 }
 
+function getEndPointsBranch({ x, y, angle = - halfPI, roseTotalAngle, roseAngle, length, width, leftCurvature = 0, rightCurvature = 0 }) {
+  const endLeftAngle = roseAngle - (Math.PI - roseTotalAngle) / 2;
+  const endRightAngle = roseTotalAngle + roseAngle + (Math.PI - roseTotalAngle) / 2;
+  const { x: endX, y: endY } = getEndXY(x, y, length, angle);
+  const { x: leftUpX, y: leftUpY } = getEndXY(endX, endY, width / 2, endLeftAngle);
+  // const { x: leftUpX, y: leftUpY } = getEndXY(endX, endY, width / 2, angle - halfPI);
+  const { x: rightUpX, y: rightUpY } = getEndXY(endX, endY, width / 2, endRightAngle);
+  // const { x: rightUpX, y: rightUpY } = getEndXY(endX, endY, width / 2, angle + halfPI);
+  return { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY };
+}
 function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature = 0, rightCurvature = 0 }) {
   // console.log("get", width);
   const { x: endX, y: endY } = getEndXY(x, y, length, angle);
@@ -47,4 +57,4 @@ function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature
   return { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY };
 }
 
-export { halfPI, getEndXY, getAngle, getControlPoint, getUpPointsBranch, getCenterXY, getHeightCurvature };
+export { halfPI, getEndXY, getAngle, getControlPoint, getEndPointsBranch, getUpPointsBranch, getCenterXY, getHeightCurvature };
