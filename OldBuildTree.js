@@ -7,7 +7,6 @@ function makeTree({x, y, branchNumber, angle = -halfPI, length, branchingLength,
   const totalAngle = (rnd(0, 1.001) < 0.5 ? -1 : 1) * (branchingTotalAngle / 5) + branchingTotalAngle;
   const roseAngle = angle - (rnd(0, 1.001) < 0.5 ? -1 : 1) * (totalAngle / 4) - totalAngle / 2;
   const { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY } = getEndPointsBranch({ x: x, y: y, angle, roseTotalAngle: totalAngle, roseAngle: roseAngle, length: length, width: width * branchingWidth });
-  // const { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY } = getUpPointsBranch({ x: x, y: y, length: length, width: width * branchingWidth });
 
   const tree = {
     x: x,
@@ -30,6 +29,7 @@ function makeTree({x, y, branchNumber, angle = -halfPI, length, branchingLength,
     color: "#4D2323",
     depth: 0,
   };
+  
   
   if (iteration !== 0) {
     addBranches({ tree: tree, count: branchNumber, branchingLength: branchingLength, branchingWidth: branchingWidth, iteration: iteration - 1 });
@@ -67,7 +67,6 @@ function addBranches({ tree, count, branchingLength, branchingWidth, maxCurvatur
     
     //для данной ветки расчитываем угол поворота розетки ее детей
     const roseAngle = branchAngle - roseTotalAngle / 2 + (rnd(0, 1.001) < 0.5 ? -1 : 1) * (roseTotalAngle / 5);
-    // const roseAngle = branchAngle - (rnd(0, 1.001) < 0.5 ? -1 : 1) * (roseTotalAngle / 4) - roseTotalAngle / 2;
     
     const { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY } = getEndPointsBranch({ x: centerX, y: centerY, angle: branchAngle, roseTotalAngle: roseTotalAngle, roseAngle: roseAngle, length: length, width: width * branchingWidth });
 

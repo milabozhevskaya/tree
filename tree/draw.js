@@ -13,22 +13,21 @@ function drawTreeLine(tree, x, y, angle = 0) {
 
 //функция прорисовки дерева (line)
 function drawTree(tree) {
-  drawLine({ beginX: tree.leftDownX, beginY: tree.leftDownY, endX: tree.leftUpX, endY: tree.leftUpY });
-  drawLine({ beginX: tree.leftUpX, beginY: tree.leftUpY, endX: tree.rightUpX, endY: tree.rightUpY, begin: false })
-  drawLine({ beginX: tree.rightUpX, beginY: tree.rightUpY, endX: tree.rightDownX, endY: tree.rightDownY, begin: false })
-  drawLine({ beginX: tree.rightDownX, beginY: tree.rightDownY, endX: tree.leftDownX, endY: tree.leftDownY, begin: false, fill: "#4D2323" })
+  drawLine({ beginX: tree.x1, beginY: tree.y1, endX: tree.x2, endY: tree.y2 });
+  drawLine({ beginX: tree.x2, beginY: tree.y2, endX: tree.x3, endY: tree.y3, begin: false })
+  drawLine({ beginX: tree.x3, beginY: tree.y3, endX: tree.x4, endY: tree.y4, begin: false })
+  drawLine({ beginX: tree.x4, beginY: tree.y4, endX: tree.x1, endY: tree.y1, begin: false, fill: tree.color })
 
   tree.branches?.forEach((branch) => {
     drawBranch(branch);
   });
 }
 function drawBranch(tree) {
-  const { x: controlLeftX, y: controlLeftY } = getControlPoint({ x1: tree.leftDownX, y1: tree.leftDownY, x2: tree.leftUpX, y2: tree.leftUpY, h: -tree.heightCurvatureLeft });
-  const { x: controlRightX, y: controlRightY } = getControlPoint({ x1: tree.rightDownX, y1: tree.rightDownY, x2: tree.rightUpX, y2: tree.rightUpY, h: tree.heightCurvatureRight });
-  drawQuadraticCurve({ beginX: tree.leftDownX, beginY: tree.leftDownY, controlX: controlLeftX, controlY: controlLeftY, endX: tree.leftUpX, endY: tree.leftUpY });
-  drawLine({ beginX: tree.leftUpX, beginY: tree.leftUpY, endX: tree.rightUpX, endY: tree.rightUpY, begin: false })
-  drawQuadraticCurve({ beginX: tree.rightUpX, beginY: tree.rightUpY, controlX: controlRightX, controlY: controlRightY, endX: tree.rightDownX, endY: tree.rightDownY, begin: false });
-  drawLine({ beginX: tree.rightDownX, beginY: tree.rightDownY, endX: tree.leftDownX, endY: tree.leftDownY, begin: false, fill: "#4D2323" });
+  
+  drawQuadraticCurve({ beginX: tree.x1, beginY: tree.y1, controlX: tree.x12, controlY: tree.y12, endX: tree.x2, endY: tree.y2 });
+  drawLine({ beginX: tree.x2, beginY: tree.y2, endX: tree.x3, endY: tree.y3, begin: false })
+  drawQuadraticCurve({ beginX: tree.x3, beginY: tree.y3, controlX: tree.x34, controlY: tree.y34, endX: tree.x4, endY: tree.y4, begin: false });
+  drawLine({ beginX: tree.x4, beginY: tree.y4, endX: tree.x1, endY: tree.y1, begin: false, fill: tree.color });
   tree.branches?.forEach((branch) => {
     drawBranch(branch);
   });

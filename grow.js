@@ -1,7 +1,7 @@
 import { rnd } from "./math.js";
 import { clear } from "./canvas.js";
 import { drawTree } from "./tree/draw.js";
-import { addBranches } from "./buildTree.js";
+import { addBranches } from "./OldBuildTree.js";
 
 
 let lastStamp = 0;

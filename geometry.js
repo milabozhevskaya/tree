@@ -1,7 +1,9 @@
+import { rnd } from "./math.js";
+
 const halfPI = Math.PI / 2;
 
 //функция нахождения конечной точки ветки
-function getEndXY(x, y, length, angle) {
+function getEndXY( x, y, length, angle = -halfPI ) {
   return {
     x: x - Math.cos(Math.PI - angle) * length,
     y: y + Math.sin(Math.PI - angle) * length
@@ -28,12 +30,12 @@ function getControlPoint({ x1, y1, x2, y2, h, levelCurvature = 5 / 6 }) {
 
 function getHeightCurvature({ x1, y1, x2, y2, pointX, pointY, pointAngle, levelCurvature = 25 / 30 }) {
   // console.log(- Math.PI - pointAngle - getAngle(x1, y1, x2, y2), "Math.PI");
-  console.log(Math.PI);
-  console.log("pointAngle", Math.PI + pointAngle);
-  console.log("angleC", getAngle(x1, y1, x2, y2));
+  // console.log(Math.PI);
+  // console.log("pointAngle", Math.PI + pointAngle);
+  // console.log("angleC", getAngle(x1, y1, x2, y2));
 
   const angleB = Math.PI - (Math.PI + pointAngle) + getAngle(x1, y1, x2, y2);
-  console.log("angleB", angleB);
+  // console.log("angleB", angleB);
   const angleA = Math.PI - Math.PI / 2 - angleB;
   const catetA = Math.hypot(x1 - x2, y1 - y2) * levelCurvature;
   return  catetA / Math.tan(angleA);
@@ -57,4 +59,15 @@ function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature
   return { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY };
 }
 
-export { halfPI, getEndXY, getAngle, getControlPoint, getEndPointsBranch, getUpPointsBranch, getCenterXY, getHeightCurvature };
+function getBetweenBranchAngles(roseTotalAngle,branchNumber) {
+  let betweenBranchAngles = [];
+  betweenBranchAngles[0] = roseTotalAngle;
+  for (let i = 1; i < branchNumber - 1; i++) {
+    betweenBranchAngles[i] = rnd(0, roseTotalAngle);
+  }
+  betweenBranchAngles.push(0);
+  betweenBranchAngles.sort();
+  return betweenBranchAngles;
+}
+
+export { halfPI, getEndXY, getAngle, getControlPoint, getEndPointsBranch, getUpPointsBranch, getCenterXY, getHeightCurvature, getBetweenBranchAngles };

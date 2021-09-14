@@ -1,20 +1,23 @@
-import { makeTree } from "../buildTree.js";
+import { makeTree } from "./makeTree.js";
+import { buildTree } from "./buildTree.js";
 import { drawTree } from "./draw.js";
 import { beginGrowth } from "../grow.js";
 import { rnd } from "../math.js";
+import { halfPI } from "../geometry.js";
 
-const branchingTotalAngle = Math.PI * 2 / 6;
-const treeProperties = {
+const branchesRules = {
   x: 450,
   y: 1050,
-  branchNumber: 2, 
+  branchNumber: 2,
+  angle: -halfPI,
+  roseAngle: 0, // 1 - to right,  -1 - to left
+  roseTotalAngle: Math.PI / 3,
   length: 180,
-  branchingLength: 0.9,
   width: 94,
+  branchingLength: 0.9,
   branchingWidth: 0.5,
-  branchingTotalAngle: branchingTotalAngle, 
-  maxCurvature: 0.1, 
-  iteration: 4,
+  color: "#4D2323",
+  depth: 6,
 };
 
 const growth = {
@@ -27,7 +30,8 @@ const growth = {
   speed: 0.01,
 };
 
-const tree = makeTree(treeProperties);
+const structureTree = makeTree(branchesRules);
+const tree = buildTree(structureTree);
 // console.log(tree);
 drawTree(tree);
 
