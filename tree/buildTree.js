@@ -1,8 +1,8 @@
-import { halfPI, getEndPointsBranch, getControlPoint, getHeightCurvature } from "../geometry.js";
+import { halfPI, getBranchingPoints, getControlPoint, getHeightCurvature } from "../geometry.js";
 import { rnd } from "../math.js";
 
-function buildTree(tree) {
-  const roseTotalAngle = tree.branches? (tree.branches.length > 1? (-tree.branches[0].angle + tree.branches[tree.branches.length - 1].angle) : -tree.branches[0].angle) : halfPI;
+function prepareTree(tree) {
+  const rosetteTotalAngle = tree.branches? (tree.branches.length > 1? (-tree.branches[0].angle + tree.branches[tree.branches.length - 1].angle) : -tree.branches[0].angle) : halfPI;
 
   const roseAngle = tree.branches? tree.branches[0].angle : tree.angle;
 
@@ -10,9 +10,9 @@ function buildTree(tree) {
 
   const x4 = tree.x + tree.width / 2
 
-  const endWidth = tree.branches? tree.branches[0].width : tree.width;
+  const endWidth = tree.branches? tree.branches[0].width : tree.endWidth;
 
-  const { leftUpX: x2, leftUpY: y2, rightUpX: x3, rightUpY: y3 } = getEndPointsBranch({ x: tree.x, y: tree.y, angle: tree.angle, roseTotalAngle: roseTotalAngle, roseAngle: roseAngle, length: tree.length, width: endWidth });
+  const { leftUpX: x2, leftUpY: y2, rightUpX: x3, rightUpY: y3 } = getBranchingPoints({ x: tree.x, y: tree.y, angle: tree.angle, rosetteTotalAngle: rosetteTotalAngle, roseAngle: roseAngle, length: tree.length, width: endWidth });
 
   const heightCurvature = (tree.width - endWidth) * 20 / 2 + 300;
 
@@ -35,7 +35,7 @@ function buildTree(tree) {
     color: tree.color,
     depth: 0,
   }
-  if (tree.branches) {
+  if (tree.branches !== 0) {
     buildBranches(treeRenderable, tree);
   }
   return treeRenderable;
@@ -47,17 +47,20 @@ function buildBranches(treeRenderable, tree) {
   if (!treeRenderable.branches) treeRenderable.branches = [];
 
   for (let i = 0; i < tree.branches.length; i++) {
+
     const branch = tree.branches[i];
 
     //чтоб найти конечные точки этой ветки, надо найти угол поворота розетки ее детей и угол розетки
 
-    const roseTotalAngle = branch.branches? (branch.branches.length > 1? (-branch.branches[0].angle + branch.branches[branch.branches.length - 1].angle) : -branch.branches[0].angle) : (branch.angle + (rnd(0, 1.001) < 0.5 ? -1 : 1) * (branch.angle / 4));
+    const rosetteTotalAngle = branch.branches.length !== 0? (branch.branches.length > 1? (-branch.branches[0].angle + branch.branches[branch.branches.length - 1].angle) : -branch.branches[0].angle) : (branch.angle + (rnd(0, 1.001) < 0.5 ? -1 : 1) * (branch.angle / 4));
 
-    const roseAngle = branch.branches? branch.branches[0].angle : branch.angle;
+    const roseAngle = branch.branches.length !== 0? branch.branches[0].angle : branch.angle;
+    
+    console.log(branch.branches.length !== 0? branch.branches[0].width : branch.endWidth, "before", branch.depth);
 
-    const endWidth = branch.branches? branch.branches[0].width : branch.widthEnd;
+    const endWidth = branch.branches.length !== 0? branch.branches[0].width : branch.endWidth;
 
-    const { leftUpX: x2, leftUpY: y2, rightUpX: x3, rightUpY: y3 } = getEndPointsBranch({ x: branch.x, y: branch.y, angle: branch.angle, roseTotalAngle: roseTotalAngle, roseAngle: roseAngle, length: branch.length, width: endWidth });
+    const { leftUpX: x2, leftUpY: y2, rightUpX: x3, rightUpY: y3 } = getBranchingPoints({ x: branch.x, y: branch.y, angle: branch.angle, rosetteTotalAngle: rosetteTotalAngle, roseAngle: roseAngle, length: branch.length, width: endWidth });
 
     // const heightCurvature = (branch.width - endWidth) / 7;
     const heightCurvatureLeft = getHeightCurvature({ x1: treeRenderable.x2, y1: treeRenderable.y2, x2: x2, y2: y2, pointAngle: branch.angle });
@@ -86,7 +89,7 @@ function buildBranches(treeRenderable, tree) {
     };
 
     //Если у ребенка есть дети, то вызвать buildBranches и передать ей ребенка
-    if (branch.branches) {
+    if (branch.branches !== 0) {
       for (let k = 0; k < branch.branches.length; k++) {
         buildBranches(treeRenderable.branches[i], branch);
       };
@@ -94,4 +97,4 @@ function buildBranches(treeRenderable, tree) {
   }
 }
 
-export { buildTree };
+export { prepareTree };

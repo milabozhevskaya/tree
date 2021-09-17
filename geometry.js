@@ -41,9 +41,9 @@ function getHeightCurvature({ x1, y1, x2, y2, pointX, pointY, pointAngle, levelC
   return  catetA / Math.tan(angleA);
 }
 
-function getEndPointsBranch({ x, y, angle = - halfPI, roseTotalAngle, roseAngle, length, width, leftCurvature = 0, rightCurvature = 0 }) {
-  const endLeftAngle = roseAngle - (Math.PI - roseTotalAngle) / 2;
-  const endRightAngle = roseTotalAngle + roseAngle + (Math.PI - roseTotalAngle) / 2;
+function getBranchingPoints({ x, y, angle = - halfPI, rosetteTotalAngle, roseAngle, length, width, leftCurvature = 0, rightCurvature = 0 }) {
+  const endLeftAngle = roseAngle - (Math.PI - rosetteTotalAngle) / 2;
+  const endRightAngle = rosetteTotalAngle + roseAngle + (Math.PI - rosetteTotalAngle) / 2;
   const { x: endX, y: endY } = getEndXY(x, y, length, angle);
   const { x: leftUpX, y: leftUpY } = getEndXY(endX, endY, width / 2, endLeftAngle);
   // const { x: leftUpX, y: leftUpY } = getEndXY(endX, endY, width / 2, angle - halfPI);
@@ -59,15 +59,15 @@ function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature
   return { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY };
 }
 
-function getBetweenBranchAngles(roseTotalAngle,branchNumber) {
+function getBetweenBranchAngles(rosetteTotalAngle,branchNumber) {
   let betweenBranchAngles = [];
-  betweenBranchAngles[0] = roseTotalAngle;
+  betweenBranchAngles[0] = rosetteTotalAngle;
   for (let i = 1; i < branchNumber - 1; i++) {
-    betweenBranchAngles[i] = rnd(0, roseTotalAngle);
+    betweenBranchAngles[i] = rnd(0, rosetteTotalAngle);
   }
   betweenBranchAngles.push(0);
   betweenBranchAngles.sort();
   return betweenBranchAngles;
 }
 
-export { halfPI, getEndXY, getAngle, getControlPoint, getEndPointsBranch, getUpPointsBranch, getCenterXY, getHeightCurvature, getBetweenBranchAngles };
+export { halfPI, getEndXY, getAngle, getControlPoint, getBranchingPoints, getUpPointsBranch, getCenterXY, getHeightCurvature, getBetweenBranchAngles };
