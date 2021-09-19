@@ -4,6 +4,9 @@ import { drawTree } from "./draw.js";
 import { beginGrowth } from "../grow.js";
 import { rnd } from "../math.js";
 import { halfPI } from "../geometry.js";
+import "./handler.js";
+// import { render } from "./handler.js";
+import { drawPoint } from "../canvas.js";
 
 const treeDescriptor = {
   x: 650,
@@ -31,14 +34,15 @@ const growth = {
 };
 
 const structureTree = makeTree(treeDescriptor);
-console.log(structureTree);
-const tree = prepareTree(structureTree);
-console.log(tree);
-drawTree(tree);
+
+let points = getTreePoints(structureTree);
+
+// const tree = prepareTree(structureTree);
+
 
 // beginGrowth(tree, growth, 50000);
 
-const points = [];
+const POINT_SIZE = 10;
 
 const pointColors = {
   normal: "black",
@@ -47,33 +51,65 @@ const pointColors = {
   control_active: "cyan",
 };
 
-function updatePoints(tree) {
-  const br1 = {
-    x1: tree.x1,
-    y1: tree.y1,
-    x12: tree.x12,
-    y12: tree.y12,
-    x2: tree.x2,
-    y2: tree.y2,
-  }
-  points.push(br1);
-console.log(points);
+function getTreePoints(structureTree, points = []) {
 
-  if (tree.branches){
-    for (let i = 0; i < tree.branches.length; i++) {
-      updatePoints(tree.branches[i]);
+  points.push({ x: structureTree.x, y: structureTree.y, id: structureTree.id });
+
+  if (structureTree.branches !== 0) {
+
+    points.push({ x: structureTree.branches[0].x, y: structureTree.branches[0].y, id: structureTree.id });
+
+    points = getBranchesPoints(structureTree, points);
+  }
+  return points;
+};
+
+function getBranchesPoints(tree, points) {
+ 
+  for (let i = 0; i < tree.branches.length; i++) {
+ 
+    const branch = tree.branches[i];
+
+    points.push({ x: (branch.branches.length !== 0? branch.branches[0].x : branch.endX), y: (branch.branches.length !== 0? branch.branches[0].y : branch.endY), id: branch.id });
+    
+    if (branch.branches.length !== 0) {
+      getBranchesPoints(branch, points);
+    } 
+    // else {
+    //   points.push({ x: tree.branches[i].x, y: tree.branches[i].y, id: tree.branches[i].id });
+
+    // }
+  }
+  return points;
+}
+render2(structureTree, points);
+
+
+function render2() {
+  const tree = prepareTree(structureTree);
+  // console.log(tree);
+  drawTree(tree);
+
+  points.forEach(point => {
+    drawPoint({ point: point, pointSize: POINT_SIZE, pointColors: "red"})
+  });
+  
+}
+
+function moveBranch(structureTree, activePoint, coord) {
+  for (let i = 0; i < structureTree.branches.length; i++) {
+    if (structureTree.branches[i].id === activePoint.id) {
+      // structureTree.branches[i].length = Math.
+      structureTree.branches[i].length = 20;
+     
+    } else if (structureTree.branches[i].branches.length !== 0) {
+      // console.log(structureTree.branches[i].branches.length);
+      moveBranch(structureTree.branches[i], activePoint, coord);
     }
   }
-  const br2 = {
-    x3: tree.x3,
-    y3: tree.y3,
-    x34: tree.x34,
-    y34: tree.x34,
-    x4: tree.x4,
-    y4: tree.y4,
-  }
-  points.push(br2);
-  // tree.forEach((branch) => shape.points.forEach((point) => point.shape = shape));
-  // points.splice(0, points.lentgth, ...shapes.flatMap(({points}) => points));
 }
-// updatePoints(tree);
+
+
+// export { render };
+
+export { points, POINT_SIZE, render2, moveBranch, structureTree };

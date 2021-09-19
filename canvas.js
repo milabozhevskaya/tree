@@ -111,7 +111,8 @@ function drawPoint({ point: { x, y, active = false, type = "normal" }, pointSize
   ctx.beginPath();
   ctx.arc(x, y, pointSize / 2, 0, 7);
   const key = `${type}${active ? '_active' : ''}`;
-  ctx.fillStyle = pointColors[key];
+  ctx.fillStyle = pointColors;
+  // ctx.fillStyle = pointColors[key];
   ctx.fill();
 }
 

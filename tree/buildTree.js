@@ -12,14 +12,14 @@ function prepareTree(tree) {
 
   const endWidth = tree.branches? tree.branches[0].width : tree.endWidth;
 
-  const { leftUpX: x2, leftUpY: y2, rightUpX: x3, rightUpY: y3 } = getBranchingPoints({ x: tree.x, y: tree.y, angle: tree.angle, rosetteTotalAngle: rosetteTotalAngle, roseAngle: roseAngle, length: tree.length, width: endWidth });
-
+  const { x2, y2, x3, y3 } = getBranchingPoints({ x: tree.branches? tree.branches[0].x : tree.endX, y: tree.branches?  tree.branches[0].y : tree.endY, angle: tree.angle, rosetteTotalAngle: rosetteTotalAngle, roseAngle: roseAngle, length: tree.length, width: endWidth });
+  
   const heightCurvature = (tree.width - endWidth) * 20 / 2 + 300;
 
   const { x: x12, y: y12 } = getControlPoint({ x1: x1, y1: tree.y, x2: x2, y2: y2, h: -heightCurvature });
   const { x: x34, y: y34 } = getControlPoint({ x1: x3, y1: y3, x2: x4, y2: tree.y, h: heightCurvature });
-
-  const treeRenderable = {
+ 
+  const renderableTree = {
     x1: x1,
     y1: tree.y,
     x2: x2,
@@ -36,15 +36,15 @@ function prepareTree(tree) {
     depth: 0,
   }
   if (tree.branches !== 0) {
-    buildBranches(treeRenderable, tree);
+    prepareBranches(renderableTree, tree);
   }
-  return treeRenderable;
+  return renderableTree;
 }
 
 //Функция вызывается при условии, что у ветки tree есть дети
-function buildBranches(treeRenderable, tree) {
+function prepareBranches(renderableTree, tree) {
   
-  if (!treeRenderable.branches) treeRenderable.branches = [];
+  if (!renderableTree.branches) renderableTree.branches = [];
 
   for (let i = 0; i < tree.branches.length; i++) {
 
@@ -56,42 +56,46 @@ function buildBranches(treeRenderable, tree) {
 
     const roseAngle = branch.branches.length !== 0? branch.branches[0].angle : branch.angle;
     
-    console.log(branch.branches.length !== 0? branch.branches[0].width : branch.endWidth, "before", branch.depth);
-
     const endWidth = branch.branches.length !== 0? branch.branches[0].width : branch.endWidth;
-
-    const { leftUpX: x2, leftUpY: y2, rightUpX: x3, rightUpY: y3 } = getBranchingPoints({ x: branch.x, y: branch.y, angle: branch.angle, rosetteTotalAngle: rosetteTotalAngle, roseAngle: roseAngle, length: branch.length, width: endWidth });
+ 
+    const { x2, y2, x3, y3 } = getBranchingPoints({ x: (branch.branches.length !== 0? branch.branches[0].x : branch.endX), y: (branch.branches.length !== 0? branch.branches[0].y : branch.endY), angle: branch.angle, rosetteTotalAngle: rosetteTotalAngle, roseAngle: roseAngle, length: branch.length, width: endWidth });
 
     // const heightCurvature = (branch.width - endWidth) / 7;
-    const heightCurvatureLeft = getHeightCurvature({ x1: treeRenderable.x2, y1: treeRenderable.y2, x2: x2, y2: y2, pointAngle: branch.angle });
-    const heightCurvatureRight = getHeightCurvature({ x1: treeRenderable.x3, y1: treeRenderable.y3, x2: x3, y2: y3,  pointAngle: branch.angle }) * -1;
 
-    const { x: x12, y: y12 } = getControlPoint({ x1: treeRenderable.x2, y1: treeRenderable.y2, x2: x2, y2: y2, h: -heightCurvatureLeft });
+    const heightCurvatureLeft = getHeightCurvature({ x1: renderableTree.x2, y1: renderableTree.y2, x2: x2, y2: y2, pointAngle: branch.angle });
 
-    const { x: x34, y: y34 } = getControlPoint({ x1: x3, y1: y3, x2: treeRenderable.x3, y2: treeRenderable.y3, h: -heightCurvatureRight });
+    // console.log(heightCurvatureLeft, "le");
+
+    const heightCurvatureRight = getHeightCurvature({ x1: renderableTree.x3, y1: renderableTree.y3, x2: x3, y2: y3,  pointAngle: branch.angle }) * -1;
+    
+    // console.log(heightCurvatureRight, "ri");
+
+    const { x: x12, y: y12 } = getControlPoint({ x1: renderableTree.x2, y1: renderableTree.y2, x2: x2, y2: y2, h: -heightCurvatureLeft });
+
+    const { x: x34, y: y34 } = getControlPoint({ x1: x3, y1: y3, x2: renderableTree.x3, y2: renderableTree.y3, h: -heightCurvatureRight });
 
     // точки ребенка
-    treeRenderable.branches[i] = {
-      x1: treeRenderable.x2,
-      y1: treeRenderable.y2,
+    renderableTree.branches[i] = {
+      x1: renderableTree.x2,
+      y1: renderableTree.y2,
       x2: x2,
       y2: y2,
       x12: x12,
       y12: y12,
       x3: x3,
       y3: y3,
-      x4: treeRenderable.x3,
-      y4: treeRenderable.y3,
+      x4: renderableTree.x3,
+      y4: renderableTree.y3,
       x34: x34,
       y34: y34,
-      color: treeRenderable.color,
+      color: renderableTree.color,
       depth: branch.depth,
     };
 
     //Если у ребенка есть дети, то вызвать buildBranches и передать ей ребенка
     if (branch.branches !== 0) {
       for (let k = 0; k < branch.branches.length; k++) {
-        buildBranches(treeRenderable.branches[i], branch);
+        prepareBranches(renderableTree.branches[i], branch);
       };
     } 
   }

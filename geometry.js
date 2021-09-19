@@ -44,13 +44,21 @@ function getHeightCurvature({ x1, y1, x2, y2, pointX, pointY, pointAngle, levelC
 function getBranchingPoints({ x, y, angle = - halfPI, rosetteTotalAngle, roseAngle, length, width, leftCurvature = 0, rightCurvature = 0 }) {
   const endLeftAngle = roseAngle - (Math.PI - rosetteTotalAngle) / 2;
   const endRightAngle = rosetteTotalAngle + roseAngle + (Math.PI - rosetteTotalAngle) / 2;
-  const { x: endX, y: endY } = getEndXY(x, y, length, angle);
-  const { x: leftUpX, y: leftUpY } = getEndXY(endX, endY, width / 2, endLeftAngle);
-  // const { x: leftUpX, y: leftUpY } = getEndXY(endX, endY, width / 2, angle - halfPI);
-  const { x: rightUpX, y: rightUpY } = getEndXY(endX, endY, width / 2, endRightAngle);
-  // const { x: rightUpX, y: rightUpY } = getEndXY(endX, endY, width / 2, angle + halfPI);
-  return { leftUpX: leftUpX, leftUpY: leftUpY, rightUpX: rightUpX, rightUpY: rightUpY };
+  
+  const { x: x2, y: y2 } = getEndXY(x, y, width / 2, endLeftAngle);
+  const { x: x3, y: y3 } = getEndXY(x, y, width / 2, endRightAngle);
+
+  return { x2, y2, x3, y3  };
 }
+// function getBranchingPoints({ x, y, angle = - halfPI, rosetteTotalAngle, roseAngle, length, width, leftCurvature = 0, rightCurvature = 0 }) {
+//   const endLeftAngle = roseAngle - (Math.PI - rosetteTotalAngle) / 2;
+//   const endRightAngle = rosetteTotalAngle + roseAngle + (Math.PI - rosetteTotalAngle) / 2;
+//   const { x: endX, y: endY } = getEndXY(x, y, length, angle);
+//   const { x: x2, y: y2 } = getEndXY(endX, endY, width / 2, endLeftAngle);
+//   const { x: x3, y: y3 } = getEndXY(endX, endY, width / 2, endRightAngle);
+
+//   return { x2, y2, x3, y3  };
+// }
 function getUpPointsBranch({ x, y, angle = -halfPI, length, width, leftCurvature = 0, rightCurvature = 0 }) {
   // console.log("get", width);
   const { x: endX, y: endY } = getEndXY(x, y, length, angle);
