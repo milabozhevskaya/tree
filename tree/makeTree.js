@@ -7,7 +7,7 @@ import { rnd } from "../math.js";
 function makeTree(descriptor) {
 
   const tree = {
-    id: "0-",
+    id: "0",
     x: descriptor.x,
     y: descriptor.y,
     angle: descriptor.angle,
@@ -69,12 +69,13 @@ function addBranches( tree, rules ) {
     // let branchAngle = rosetteStartAngle + betweenBranchAngle * i;
     let branchAngle = rosetteStartAngle + betweenBranchAngles[i];
     
-    const id = tree.id + `child${i}-` + (tree.depth + 1) + '-';
+    const id = tree.id + `-${i}`;
+    // const id = tree.id + `child${i}-` + (tree.depth + 1) + '-';
 
     tree.branches[i] = makeBranch(tree, id, x, y, branchAngle, length, width, tree.color, tree.depth + 1);
     if (tree.depth === rules.maxDepth - 1) {
       tree.branches[i].endWidth = width * rules.widthRatio;
-      const { x, y } = getEndXY(tree.branches[i].x, tree.branches[i].y, tree.branches[i].length, tree.branches[i].angle )
+      const { x, y } = getEndXY(tree.branches[i].x, tree.branches[i].y, tree.branches[i].length, tree.branches[i].angle );
       tree.branches[i].endX = x;
       tree.branches[i].endY = y;
     }
