@@ -1,4 +1,4 @@
-import { POINT_SIZE, structureTree } from "./app.js";
+import { POINT_SIZE, structureTree, treeXYPercents } from "./app.js";
 import { drawPoint, clear } from "../canvas.js";
 import { prepareTree } from "./buildTree.js";
 import { drawTree } from "./draw.js";
@@ -8,6 +8,16 @@ import { getEndXY } from '../geometry.js';
 let activePoint = null;
 let activeBranch = null;
 let points = null;
+
+window.addEventListener('resize', function() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  const treeX = canvas.width * treeXYPercents.x / 100;
+  const treeY = canvas.height * treeXYPercents.y / 100;
+  moveTree(structureTree.x - treeX, structureTree.y - treeY);
+  clear();
+  render();
+});
 
 canvas.onmousedown = (e) => {
   if (activePoint) {
@@ -45,6 +55,31 @@ canvas.onmouseup = (e) => {
 
   clear();
   render();
+}
+
+function moveTree(deltaX, deltaY, tree = structureTree) {
+  if (!tree.trunk) {
+    tree.x -= deltaX;
+    tree.y -= deltaY;
+  }
+
+  if (tree.branches.length !== 0) {
+    for (let i = 0; i < tree.branches.length; i++) {
+      const branch = tree.branches[i];
+      branch.x -= deltaX;
+      branch.y -= deltaY;
+
+      if (branch.branches.length !== 0) {
+        moveTree(deltaX, deltaY, branch);
+      } else {
+        branch.endX -= deltaX;
+        branch.endY -= deltaY;
+      }
+    }
+  } else {
+    branch.endX -= deltaX;
+    branch.endY -= deltaY;
+  }
 }
 
 function movePoint(point, {x, y}) {
