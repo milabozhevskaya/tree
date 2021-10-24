@@ -5,7 +5,7 @@ import { render } from "./handler.js";
 
 const treeDescriptor = {
   x: 650,
-  y: 950,
+  y: 920,
   branchingPotency: 2,
   angle: -halfPI,
   bendAngle: 0, // 1 - to right,  -1 - to left
@@ -16,6 +16,11 @@ const treeDescriptor = {
   branchWidthRatio: 0.5,
   color: "#4D2323",
   maxDepth: 5,
+};
+
+const treeXYPercents = {
+  x: treeDescriptor.x * 100 / canvas.width,
+  y: treeDescriptor.y * 100 / canvas.height,
 };
 
 const growth = {
@@ -43,4 +48,4 @@ const pointColors = {
 
 render();
 
-export { POINT_SIZE, structureTree };
+export { POINT_SIZE, structureTree, treeXYPercents };

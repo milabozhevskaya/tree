@@ -2,8 +2,8 @@ import { getAngle, getEndXY } from "./geometry.js";
 
 const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext("2d");
-canvas.width = innerWidth;
-canvas.height = innerHeight;
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
 
 function clear() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
