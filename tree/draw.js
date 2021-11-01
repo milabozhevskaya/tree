@@ -1,5 +1,5 @@
 import { getControlPoint, getEndXY } from "../geometry.js";
-import { drawArc, drawLine, drawQuadraticCurve } from "../canvas.js";
+import { drawArc, drawLine, drawQuadraticCurve, drawPath, createPath } from "../canvas.js";
 
 //функция прорисовки дерева (line)
 function drawTreeLine(tree, x, y, angle = 0) {
@@ -13,21 +13,33 @@ function drawTreeLine(tree, x, y, angle = 0) {
 
 //функция прорисовки дерева (line)
 function drawTree(tree) {
-  drawLine({ beginX: tree.x1, beginY: tree.y1, endX: tree.x2, endY: tree.y2 });
-  drawLine({ beginX: tree.x2, beginY: tree.y2, endX: tree.x3, endY: tree.y3, begin: false })
-  drawLine({ beginX: tree.x3, beginY: tree.y3, endX: tree.x4, endY: tree.y4, begin: false })
-  drawLine({ beginX: tree.x4, beginY: tree.y4, endX: tree.x1, endY: tree.y1, begin: false, fill: tree.color })
-
+  const paths = [
+    { beginX: tree.x1, beginY: tree.y1, endX: tree.x2, endY: tree.y2, id: tree.id, fill: tree.color },
+    { endX: tree.x3, endY: tree.y3 },
+    { endX: tree.x4, endY: tree.y4 },
+    { endX: tree.x1, endY: tree.y1 },
+  ];
+  createPath(paths, true);
   tree.branches?.forEach((branch) => {
     drawBranch(branch);
   });
+  drawPath();
 }
 function drawBranch(tree) {
   
-  drawQuadraticCurve({ beginX: tree.x1, beginY: tree.y1, controlX: tree.x12, controlY: tree.y12, endX: tree.x2, endY: tree.y2 });
-  drawLine({ beginX: tree.x2, beginY: tree.y2, endX: tree.x3, endY: tree.y3, begin: false })
-  drawQuadraticCurve({ beginX: tree.x3, beginY: tree.y3, controlX: tree.x34, controlY: tree.y34, endX: tree.x4, endY: tree.y4, begin: false });
-  drawLine({ beginX: tree.x4, beginY: tree.y4, endX: tree.x1, endY: tree.y1, begin: false, fill: tree.color });
+  // drawQuadraticCurve({ beginX: tree.x1, beginY: tree.y1, controlX: tree.x12, controlY: tree.y12, endX: tree.x2, endY: tree.y2 });
+  // drawLine({ beginX: tree.x2, beginY: tree.y2, endX: tree.x3, endY: tree.y3, begin: false })
+  // drawQuadraticCurve({ beginX: tree.x3, beginY: tree.y3, controlX: tree.x34, controlY: tree.y34, endX: tree.x4, endY: tree.y4, begin: false });
+  // drawLine({ beginX: tree.x4, beginY: tree.y4, endX: tree.x1, endY: tree.y1, begin: false, fill: tree.color });
+
+  const paths = [
+    { beginX: tree.x1, beginY: tree.y1, controlX: tree.x12, controlY: tree.y12, endX: tree.x2, endY: tree.y2, id: tree.id, fill: tree.color },
+    { endX: tree.x3, endY: tree.y3 },
+    { controlX: tree.x34, controlY: tree.y34, endX: tree.x4, endY: tree.y4 },
+    { endX: tree.x1, endY: tree.y1 },
+  ];
+  createPath(paths);
+
   tree.branches?.forEach((branch) => {
     drawBranch(branch);
   });

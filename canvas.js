@@ -4,6 +4,18 @@ const canvas = document.querySelector('#canvas');
 const ctx = canvas.getContext("2d");
 canvas.width = window.innerWidth;
 canvas.height = window.innerHeight;
+let treePath = [];
+
+function findPath(x, y) {
+  let id = '';
+  treePath.forEach(path => {
+    if (ctx.isPointInPath(path, x, y)) {
+      id = path.id;
+    }
+  });
+
+  return id;
+}
 
 function clear() {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -107,6 +119,46 @@ function drawLine({ beginX, beginY, endX, endY, begin = true, lineWidth = 1, str
   }
 }
 
+//переделана для отрисовки ствола
+function createPath(paths, trunk = false) {
+  if (trunk) treePath = [];
+  const branch = new Path2D();
+  if (trunk) {
+    paths.forEach((path, i) => {
+      if (i === 0) {
+        branch.moveTo(path.beginX, path.beginY);
+      }
+      branch.lineTo(path.endX, path.endY);
+    });
+  } else {
+    paths.forEach((path, i) => {
+      if (i === 0) {
+        branch.moveTo(path.beginX, path.beginY);
+        branch.quadraticCurveTo(path.controlX, path.controlY, path.endX, path.endY)
+      } else if (i === 1 || i === 3) {
+        branch.lineTo(path.endX, path.endY);
+      } else if (i === 2) {
+        branch.quadraticCurveTo(path.controlX, path.controlY, path.endX, path.endY)
+      }
+    });
+  }
+  branch.closePath();
+  branch.id = paths[0].id;
+  branch.fill = paths[0].fill;
+  treePath.push(branch);
+}
+function drawPath () {
+
+  treePath.forEach(path => {
+    ctx.lineWidth = 2;
+    ctx.strokeStyle = path.fill;
+    ctx.fillStyle = path.fill;
+    ctx.stroke(path);
+    ctx.fill(path);
+  
+  })
+}
+
 function drawPoint({ point: { x, y, active = false, type = "normal" }, pointSize, pointColors }) {
   ctx.beginPath();
   ctx.arc(x, y, pointSize / 2, 0, 7);
@@ -116,4 +168,4 @@ function drawPoint({ point: { x, y, active = false, type = "normal" }, pointSize
   ctx.fill();
 }
 
-export { drawArc, drawLine, curve, drawCircle, drawQuadraticCurve, drawPoint, clear };
+export { drawArc, drawLine, curve, drawCircle, drawQuadraticCurve, drawPoint, clear, createPath, drawPath, findPath };

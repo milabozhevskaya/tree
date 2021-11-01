@@ -4,7 +4,7 @@ import { rnd } from "../math.js";
 function prepareTree(tree) {
   const rosetteTotalAngle = tree.branches? (tree.branches.length > 1? (-tree.branches[0].angle + tree.branches[tree.branches.length - 1].angle) : -tree.branches[0].angle) : halfPI;
 
-  const roseAngle = tree.branches? tree.branches[0].angle : tree.angle;
+  const roseAngle = tree.branches ? tree.branches[0].angle : tree.angle;
 
   const x1 = tree.x - tree.width / 2;
 
@@ -18,7 +18,7 @@ function prepareTree(tree) {
 
   const { x: x12, y: y12 } = getControlPoint({ x1: x1, y1: tree.y, x2: x2, y2: y2, h: -heightCurvature });
   const { x: x34, y: y34 } = getControlPoint({ x1: x3, y1: y3, x2: x4, y2: tree.y, h: heightCurvature });
- 
+
   const renderableTree = {
     x1: x1,
     y1: tree.y,
@@ -33,6 +33,7 @@ function prepareTree(tree) {
     x34: x34,
     y34: y34,
     color: tree.color,
+    id: tree.id,
     depth: 0,
   }
   if (tree.branches !== 0) {
@@ -89,6 +90,7 @@ function prepareBranches(renderableTree, tree) {
       x34: x34,
       y34: y34,
       color: renderableTree.color,
+      id: branch.id,
       depth: branch.depth,
     };
 
