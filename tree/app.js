@@ -5,13 +5,13 @@ import { render } from "./handler.js";
 
 const treeDescriptor = {
   x: 650,
-  y: 920,
+  y: 720,
   branchingPotency: 2,
   angle: -halfPI,
   bendAngle: 0, // 1 - to right,  -1 - to left
   rosetteTotalAngle: Math.PI / 3,
-  length: 180,
-  width: 94,
+  length: 140,
+  width: 84,
   branchLengthRatio: 0.9,
   branchWidthRatio: 0.5,
   color: "#4D2323",

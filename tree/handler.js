@@ -1,5 +1,5 @@
 import { POINT_SIZE, structureTree, treeXYPercents } from "./app.js";
-import { drawPoint, clear } from "../canvas.js";
+import { drawPoint, clear, findPath } from "../canvas.js";
 import { prepareTree } from "./buildTree.js";
 import { drawTree } from "./draw.js";
 import { getAngle } from '../geometry.js';
@@ -8,6 +8,7 @@ import { getEndXY } from '../geometry.js';
 let activePoint = null;
 let activeBranch = null;
 let points = null;
+let activeCoord = null;
 
 window.addEventListener('resize', function() {
   canvas.width = window.innerWidth;
@@ -20,25 +21,38 @@ window.addEventListener('resize', function() {
 });
 
 canvas.onmousedown = (e) => {
-  if (activePoint) {
-    activePoint.active = false;
-    activePoint = null;
+  // if (activePoint) {
+  //   activePoint.active = false;
+  //   activePoint = null;
+  // }
+  // const point = findPoint(e.layerX, e.layerY, points);
+  // if (point) {
+  //   point.active = true;
+  //   activePoint = point;
+  //   findBrunch(activePoint.id);
+  // }
+  findBrunch(findPath(e.layerX, e.layerY));
+  if (activeBranch && activeBranch.id === '0') {
+    activeCoord = {
+      x: e.layerX,
+      y: e.layerY,
+    };
   }
-  const point = findPoint(e.layerX, e.layerY, points);
-  if (point) {
-    point.active = true;
-    activePoint = point;
-    findBrunch(activePoint.id);
-  }
-
-  clear();
-  render();
+  // clear();
+  // render();
 }
 
 canvas.onmousemove = (e) => {
-  if (activeBranch && activePoint) {
-    moveBranch({x: e.layerX, y: e.layerY});
-
+  if (activeBranch) {
+    if (activeBranch.id === '0') {
+      const x = activeCoord.x - e.layerX;
+      const y = activeCoord.y - e.layerY;
+      moveTree(x, y);
+      activeCoord.x = e.layerX;
+      activeCoord.y = e.layerY;
+    } else {    
+      moveBranch({ x: e.layerX, y: e.layerY });
+    }
     clear();
     render();
   }
@@ -51,6 +65,7 @@ canvas.onmouseup = (e) => {
   }
   if (activeBranch) {
     activeBranch = null;
+    activeCoord = null;
   }
 
   clear();
@@ -119,7 +134,9 @@ function render() {
 function moveBranch(coord) {
   const angle = activeBranch.angle - getAngle(activeBranch.x,  activeBranch.y, coord.x, coord.y);
   activeBranch.angle -= angle;
-  moveChildrenBranch(angle);
+  if (activeBranch.branches.length !== 0) {
+    moveChildrenBranch(angle);
+  }
 }
 
 function moveChildrenBranch(angle, branch = activeBranch) {
@@ -146,6 +163,10 @@ function moveChildrenBranch(angle, branch = activeBranch) {
 }
 
 function findBrunch(id, tree = structureTree) {
+  if (tree.id === id) {
+    activeBranch = tree;
+    return;
+  }
   for (let i = 0; i < tree.branches.length; i++) {
     const branch = tree.branches[i];
     if (branch.id === id) {
